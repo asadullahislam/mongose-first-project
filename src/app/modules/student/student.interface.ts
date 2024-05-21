@@ -8,7 +8,7 @@ export type Guardian = {
 };
 export type UserName = {
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
 };
 export type LocalGurdian = {
@@ -20,7 +20,7 @@ export type LocalGurdian = {
 export type Student = {
   id: string;
   name: UserName;
-  gender: 'Male' | 'Female';
+  gender: 'Male' | 'Female' | 'other';
 
   dateOfBirth?: string;
   email: string;
