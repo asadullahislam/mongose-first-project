@@ -1,8 +1,12 @@
 import { Schema, model } from 'mongoose';
-import { Guardian, LocalGurdian, Student, UserName } from './student.interface';
-import validator from 'validator';
+import {
+  TGuardian,
+  TLocalGurdian,
+  TStudent,
+  TUserName,
+} from './student.interface';
 
-const userNameSchema = new Schema<UserName>({
+const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     required: [true, 'First Name is required'],
@@ -25,7 +29,7 @@ const userNameSchema = new Schema<UserName>({
   },
 });
 
-const guardianSchema = new Schema<Guardian>({
+const guardianSchema = new Schema<TGuardian>({
   fatherName: {
     type: String,
     required: [true, "Father's Name is required"],
@@ -52,7 +56,7 @@ const guardianSchema = new Schema<Guardian>({
   },
 });
 
-const localGruardianSchema = new Schema<LocalGurdian>({
+const localGruardianSchema = new Schema<TLocalGurdian>({
   name: {
     type: String,
     required: [true, "Local Guardian's Name is required"],
@@ -67,12 +71,19 @@ const localGruardianSchema = new Schema<LocalGurdian>({
   },
 });
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent>({
   id: {
     type: String,
     required: [true, 'Student ID is required'],
     unique: true,
   },
+  user: {
+    type: Schema.Types.ObjectId,
+    required: [true, 'User ID is required'],
+    unique: true,
+    ref: 'User',
+  },
+
   name: {
     type: userNameSchema,
     required: [true, 'Name is required'],
@@ -90,10 +101,6 @@ const studentSchema = new Schema<Student>({
     type: String,
     required: [true, 'Email is required'],
     unique: true,
-    // validate: {
-    //   validator: (value: string) => validator.isEmail(value),
-    //   message: '{VALUE} is not a valid email type',
-    // },
   },
   contactNo: {
     type: String,
@@ -127,14 +134,10 @@ const studentSchema = new Schema<Student>({
     required: [true, 'Local Guardian information is required'],
   },
   profileImg: { type: String },
-  isActive: {
-    type: String,
-    enum: {
-      values: ['active', 'blocked'],
-      message: '{VALUE} is not a valid status',
-    },
-    default: 'active',
+  isDeleted: {
+    type: Boolean,
+    default: false,
   },
 });
 
-export const StudentModel = model<Student>('Student', studentSchema);
+export const Student = model<TStudent>('Student', studentSchema);
